@@ -702,44 +702,128 @@ function getRadian(degree) {
 // console.log(solution(3, 3));
 
 // 하노이 탑
-// 한 번에 하나의 원판 옮김
-// 큰 원판이 작은 원판보다 아래
-// 1번 기둥에서 3번 기둥으로
-// 최소 회수
+// function solution(n) {
+//     var answer = [];
+//     let stack = [[],[],[]];
+//     for(let i=n; i>0; i--){
+//         stack[0].push(i);
+//     }
 
-// n-3번째 원판을 기둥 2로 옮김
-// n-2번째 원판을 기둥 3으로 옮김
-// n-1번째 원판을 기둥 2로 옮김
-// n번째 원판을 기둥 3으로 옮김
+//     D(n, 0, 2);
 
-// n이 짝수면 -> 짝수원판은 오른쪽으로(3), 홀수원판은 왼쪽으로(1/2)
-// n이 홀수면 -> 홀수원판을 오른쪽으로(3), 짝수원판을 왼쪽으로(1/2)
+//     return answer;
 
-function solution(n) {
-    var answer = [];
-    let stack = [[],[],[]];
-    for(let i=n; i>0; i--){
-        stack[0].push(i);
-    }
+//     function D(n, src, dst){
+//         if(n===1) {
+//             stack[dst].push(stack[src].pop());
+//             answer.push([src+1,dst+1]);
+//         }else{
+//             let otherDst = 0;
+//             while(otherDst===src || otherDst===dst) otherDst++;
+//             D(n-1, src, otherDst);
+//             stack[dst].push(stack[src].pop());
+//             answer.push([src+1,dst+1]);
+//             D(n-1, otherDst, dst);
+//         }
+//         return;
+//     }
+// }
 
-    D(n, 0, 2);
+// console.log(solution(4));
 
-    return answer;
+// 미로 탈출
+// 'S' : start
+// 'L' : lever
+// 'E' : exit
+// function solution(maps) {
+//     let start = [];
+//     let lever = [];
+//     let exit = [];
 
-    function D(n, src, dst){
-        if(n===1) {
-            stack[dst].push(stack[src].pop());
-            answer.push([src+1,dst+1]);
-        }else{
-            let otherDst = 0;
-            while(otherDst===src || otherDst===dst) otherDst++;
-            D(n-1, src, otherDst);
-            stack[dst].push(stack[src].pop());
-            answer.push([src+1,dst+1]);
-            D(n-1, otherDst, dst);
-        }
-        return;
-    }
+//     for(let i=0; i<maps.length; i++){
+//         let startIndex = maps[i].indexOf('S');
+//         let leverIndex = maps[i].indexOf('L');
+//         let exitIndex = maps[i].indexOf('E');
+//         if(startIndex>=0) start = [i, startIndex];
+//         if(leverIndex>=0) lever = [i, leverIndex];
+//         if(exitIndex>=0) exit = [i, exitIndex];
+//     }
+
+//     let distanceToLever= bfs(maps, start, lever);
+//     let distanceToExit = bfs(maps, lever, exit);
+
+//     if(distanceToLever === -1 || distanceToExit === -1)
+//         return -1;
+
+//     return distanceToLever + distanceToExit;
+// }
+
+// function bfs(maps, src, dst){
+//     let visited = Array.from(Array(maps.length), () => new Array(maps.length).fill(0));
+//     let queue = [[src[0], src[1], 0]];
+//     let directions = [[-1,0], [1,0], [0,-1], [0,1]];
+
+//     while(queue.length>0){
+//         let [r, c, dist] = queue.pop();
+//         if(r === dst[0] && c === dst[1]){
+//             return dist;
+//         }
+
+//         for(let [dirR, dirC] of directions){
+//             newR = r + dirR;
+//             newC = c + dirC;
+//             if(0<=newR && newR<maps.length && 0<=newC && newC<maps.length && maps[newR][newC]!=='X' && visited[newR][newC]===0){
+//                 visited[newR][newC] = 1;
+//                 queue.push([newR, newC, dist+1]);
+//             }
+//         }
+//     }
+
+//     return -1;
+// };
+
+// console.log(solution(["LOOXS","OOOOX","OOOOO","OOOOO","EOOOO"]));
+
+// function resolveAfter2Seconds() {
+//     return new Promise((resolve) => {
+//         setTimeout(() => {
+//             resolve("return value");
+//         }, 2000);
+//     });
+// }
+
+// async function asyncCall() {
+//     console.log("calling");
+//     const result = await new Promise((res) => {
+//         setTimeout(() => res("ㅎㅇ"), 2000);
+//     });
+//     console.log(result);
+// }
+
+// asyncCall();
+
+// 요격 시스템
+// 모든 폭격을 커버하기위한 최소 요격수
+function solution(targets) {
+  answer = 0;
+
+  targets.sort((a, b) => a[0] - b[0]);
+
+  let coverLimit = 0;
+
+  for(let target of targets){
+      if(target[0]>=coverLimit){
+          answer++;
+          coverLimit = target[1];
+      }else {
+          if(target[1]<coverLimit) coverLimit = target[1];
+      }
+  }
+
+  return answer;
 }
 
-console.log(solution(4));
+let targets = [[4,5],[4,8],[10,14],[11,13],[5,12],[3,7],[1,4]];
+console.log(solution(targets));
+
+//
