@@ -804,26 +804,186 @@ function getRadian(degree) {
 
 // 요격 시스템
 // 모든 폭격을 커버하기위한 최소 요격수
-function solution(targets) {
-  answer = 0;
+// function solution(targets) {
+//   answer = 0;
 
-  targets.sort((a, b) => a[0] - b[0]);
+//   targets.sort((a, b) => a[0] - b[0]);
 
-  let coverLimit = 0;
+//   let coverLimit = 0;
 
-  for(let target of targets){
-      if(target[0]>=coverLimit){
-          answer++;
-          coverLimit = target[1];
-      }else {
-          if(target[1]<coverLimit) coverLimit = target[1];
-      }
-  }
+//   for(let target of targets){
+//       if(target[0]>=coverLimit){
+//           answer++;
+//           coverLimit = target[1];
+//       }else {
+//           if(target[1]<coverLimit) coverLimit = target[1];
+//       }
+//   }
 
-  return answer;
+//   return answer;
+// }
+
+// let targets = [[4,5],[4,8],[10,14],[11,13],[5,12],[3,7],[1,4]];
+// console.log(solution(targets));
+
+// 미로 탈출 (카카오) #SOLVE ME
+// function solution(n, start, end, roads, traps) {
+//   var answer = 0; // minimal sum of cost
+
+//   let array = Array.from({length:n}, ()=>new Array(4).fill(0));
+
+//   return array;
+// }
+
+// let n = 4;
+// let start = 1;
+// let end = 4;
+// let roads = [[1,2,1], [3,2,1], [2,4,1]]; // src, dst, cost
+// let traps = [2,3];
+// console.log(solution(n, start, end, roads, traps));
+
+// 택배 상자 꺼내기
+// 총 n개의 택배 상자를 한 층에 w개씩 적재 (1층 좌->우, 2층 우->좌)
+// A 위에 쌓인 상자는 몇 개?
+// function solution(n, w, num) {
+//     var answer = 0;
+
+//     let box_arrs = [];
+//     for (let i = 0; i < w; i++) {
+//         box_arrs[i] = [];
+//     }
+
+//     for (let i = 1; i <= n; i++) {
+//         if (Math.floor((i - 1) / w) % 2 === 0) {
+//             const box_arr = box_arrs[(i - 1) % w];
+//             box_arr.push(i);
+//         } else {
+//             const box_arr = box_arrs[(w - (i % w)) % w];
+//             box_arr.push(i);
+//         }
+//     }
+
+//     let box_arr;
+//     if (Math.floor((num - 1) / w) % 2 === 0) {
+//         box_arr = box_arrs[(num - 1) % w];
+//     } else {
+//         box_arr = box_arrs[(w - (num % w)) % w];
+//     }
+//     box_arr.forEach(v => (v>=num)?answer++:null );
+
+//     return answer;
+// }
+
+// console.log(solution(13, 3, 6));
+
+// 피보나치
+// function fibonacchi(num){
+//   let fib = {};
+//   fib[1] = BigInt(1);
+//   fib[2] = BigInt(1);
+
+//   for(let i=3; i<=num; i++){
+//     fib[i] = fib[i-2] + fib[i-1];
+//   }
+
+//   return fib[num];
+// }
+
+// console.log(fibonacchi(47).toString());
+
+// 지게차와 크레인. v1.단순무식 / v2.외부 속성
+function solution(storage, requests) {
+    var answer = 0;
+
+    let array = [];
+    for (let i = 0; i < storage.length; i++) {
+        array[i] = [];
+        for (let j = 0; j < storage[0].length; j++) {
+            array[i][j] = storage[i][j];
+        }
+    }
+
+    requests.forEach((target) => {
+        let boxes = [];
+        if (target.length < 2) {
+            for (let i = 0; i < array.length; i++) {
+                for (let j = 0; j < array[0].length; j++) {
+                    if (array[i][j] === target[0]) {
+                        if (isOutside(i, j)) boxes.push([i, j]);
+                    }
+                }
+            }
+        } else {
+            target = target[0];
+            for (let i = 0; i < array.length; i++) {
+                for (let j = 0; j < array[0].length; j++) {
+                    if (array[i][j] === target[0]) boxes.push([i, j]);
+                }
+            }
+        }
+        boxes.forEach(([i, j]) => (array[i][j] = " "));
+
+        console.log(array);
+    });
+
+    for (let i = 0; i < array.length; i++) {
+        for (let j = 0; j < array[0].length; j++) {
+            if (array[i][j] !== " ") answer++;
+        }
+    }
+
+    function isOutside(i, j) {
+        if (i === 0 || i === array.length - 1 || j === 0 || j === array[0].length - 1) return true;
+        return routeCheck(i + 1, j) || routeCheck(i - 1, j) || routeCheck(i, j + 1) || routeCheck(i, j - 1);
+    }
+
+    function routeCheck(i, j) {
+        if (i < 0 || j < 0 || i >= array.length || j > array[0].length) return false;
+        if (array[i][j] !== " ") return false;
+        let routes = [];
+        let di = 0,
+            dj = 0;
+
+        do {
+            if (i === 0 || i === array.length - 1 || j === 0 || j === array[0].length - 1) return true;
+
+            di = 0;
+            dj = 0;
+            if (i + 1 < array.length && !routes.includes((i + 1) * array[0].length + j) && array[i + 1][j] === " ") {
+                routes.push((i + 1) * array[0].length + j);
+                di = 1;
+            } else if (i > 0 && !routes.includes((i - 1) * array[0].length + j) && array[i - 1][j] === " ") {
+                routes.push((i - 1) * array[0].length + j);
+                di = -1;
+            } else if (j + 1 < array[0].length && !routes.includes(i * array[0].length + j + 1) && array[i][j + 1] === " ") {
+                routes.push(i * array[0].length + j + 1);
+                dj = 1;
+            } else if (j > 0 && !routes.includes(i * array[0].length + j - 1) && array[i][j - 1] === " ") {
+                routes.push(i * array[0].length + j - 1);
+                dj = -1;
+            }
+
+            i += di;
+            j += dj;
+        } while (di !== 0 || dj !== 0);
+
+        return false;
+    }
+
+    return answer;
 }
 
-let targets = [[4,5],[4,8],[10,14],[11,13],[5,12],[3,7],[1,4]];
-console.log(solution(targets));
+let storage = ["AZWQY", "CAABX", "BBDDA", "ACACA"];
+let requests = ["A", "BB", "A"];
 
-//
+let storage2 = ["AAAAAA", "ABBBBA", "ACABBA", "AAAABA", "ABBBBA", "BBAAAA"];
+let requests2 = ["BB", "C"];
+
+let storage3 = ["HAH", "HBH", "HHH", "HAH", "HBH"];
+let requests3 = ["C", "B", "B", "B", "B", "H"];
+
+let storage4 = ["AAAAA", "ABCDA", "AGAEA", "AZAFA", "ZYAAA"];
+let requests4 = ["BB", "DD", "Z", "Y", "Z", "G", "C", "E", "F"];
+
+console.log(solution(storage, requests));
+//console.log(Array.from(storage2, str=>Array.from(str)));
