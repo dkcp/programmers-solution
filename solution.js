@@ -891,99 +891,103 @@ function getRadian(degree) {
 
 // console.log(fibonacchi(47).toString());
 
-// 지게차와 크레인. v1.단순무식 / v2.외부 속성
-function solution(storage, requests) {
-    var answer = 0;
+// 지게차와 크레인. 스택 DFS
+// function solution(storage, requests) {
+//     var answer = 0;
 
-    let array = [];
-    for (let i = 0; i < storage.length; i++) {
-        array[i] = [];
-        for (let j = 0; j < storage[0].length; j++) {
-            array[i][j] = storage[i][j];
-        }
-    }
+//     let array = [];
+//     for (let i = 0; i < storage.length; i++) {
+//         array[i] = [];
+//         for (let j = 0; j < storage[0].length; j++) {
+//             array[i][j] = storage[i][j];
+//         }
+//     }
 
-    requests.forEach((target) => {
-        let boxes = [];
-        if (target.length < 2) {
-            for (let i = 0; i < array.length; i++) {
-                for (let j = 0; j < array[0].length; j++) {
-                    if (array[i][j] === target[0]) {
-                        if (isOutside(i, j)) boxes.push([i, j]);
-                    }
-                }
-            }
-        } else {
-            target = target[0];
-            for (let i = 0; i < array.length; i++) {
-                for (let j = 0; j < array[0].length; j++) {
-                    if (array[i][j] === target[0]) boxes.push([i, j]);
-                }
-            }
-        }
-        boxes.forEach(([i, j]) => (array[i][j] = " "));
+//     requests.forEach((target) => {
+//         let boxes = [];
+//         if (target.length < 2) {
+//             for (let i = 0; i < array.length; i++) {
+//                 for (let j = 0; j < array[0].length; j++) {
+//                     if (array[i][j] === target[0]) {
+//                         if (isOutside(i, j)) boxes.push([i, j]);
+//                     }
+//                 }
+//             }
+//         } else {
+//             target = target[0];
+//             for (let i = 0; i < array.length; i++) {
+//                 for (let j = 0; j < array[0].length; j++) {
+//                     if (array[i][j] === target[0]) boxes.push([i, j]);
+//                 }
+//             }
+//         }
+//         boxes.forEach(([i, j]) => (array[i][j] = " "));
+//     });
 
-        console.log(array);
-    });
+//     for (let i = 0; i < array.length; i++) {
+//         for (let j = 0; j < array[0].length; j++) {
+//             if (array[i][j] !== " ") answer++;
+//         }
+//     }
 
-    for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < array[0].length; j++) {
-            if (array[i][j] !== " ") answer++;
-        }
-    }
+//     function isOutside(i, j) {
+//         if (i < 0 || j < 0 || i >= array.length || j > array[0].length) return false;
 
-    function isOutside(i, j) {
-        if (i === 0 || i === array.length - 1 || j === 0 || j === array[0].length - 1) return true;
-        return routeCheck(i + 1, j) || routeCheck(i - 1, j) || routeCheck(i, j + 1) || routeCheck(i, j - 1);
-    }
+//         const visited = Array.from({ length: array.length }, () => Array(array[0].length).fill(false));
+//         const directions = [
+//             [1, 0],
+//             [-1, 0],
+//             [0, 1],
+//             [0, -1],
+//         ];
 
-    function routeCheck(i, j) {
-        if (i < 0 || j < 0 || i >= array.length || j > array[0].length) return false;
-        if (array[i][j] !== " ") return false;
-        let routes = [];
-        let di = 0,
-            dj = 0;
+//         const stack = [[i, j]];
 
-        do {
-            if (i === 0 || i === array.length - 1 || j === 0 || j === array[0].length - 1) return true;
+//         while (stack.length > 0) {
+//             const [x, y] = stack.pop();
 
-            di = 0;
-            dj = 0;
-            if (i + 1 < array.length && !routes.includes((i + 1) * array[0].length + j) && array[i + 1][j] === " ") {
-                routes.push((i + 1) * array[0].length + j);
-                di = 1;
-            } else if (i > 0 && !routes.includes((i - 1) * array[0].length + j) && array[i - 1][j] === " ") {
-                routes.push((i - 1) * array[0].length + j);
-                di = -1;
-            } else if (j + 1 < array[0].length && !routes.includes(i * array[0].length + j + 1) && array[i][j + 1] === " ") {
-                routes.push(i * array[0].length + j + 1);
-                dj = 1;
-            } else if (j > 0 && !routes.includes(i * array[0].length + j - 1) && array[i][j - 1] === " ") {
-                routes.push(i * array[0].length + j - 1);
-                dj = -1;
-            }
+//             if (x === 0 || x === array.length - 1 || y === 0 || y === array[0].length - 1) return true;
 
-            i += di;
-            j += dj;
-        } while (di !== 0 || dj !== 0);
+//             visited[x][y] = true;
 
-        return false;
-    }
+//             for (const [dx, dy] of directions) {
+//                 const newX = x + dx;
+//                 const newY = y + dy;
 
-    return answer;
-}
+//                 if (
+//                     newX >= 0 &&
+//                     newX < array.length &&
+//                     newY >= 0 &&
+//                     newY < array[0].length &&
+//                     array[newX][newY] === " " &&
+//                     !visited[newX][newY]
+//                 ) {
+//                     stack.push([newX, newY]);
+//                 }
+//             }
+//         }
 
-let storage = ["AZWQY", "CAABX", "BBDDA", "ACACA"];
-let requests = ["A", "BB", "A"];
+//         return false;
+//     }
 
-let storage2 = ["AAAAAA", "ABBBBA", "ACABBA", "AAAABA", "ABBBBA", "BBAAAA"];
-let requests2 = ["BB", "C"];
+//     return answer;
+// }
 
-let storage3 = ["HAH", "HBH", "HHH", "HAH", "HBH"];
-let requests3 = ["C", "B", "B", "B", "B", "H"];
+// let storage = ["AZWQY", "CAABX", "BBDDA", "ACACA"];
+// let requests = ["A", "BB", "A"];
 
-let storage4 = ["AAAAA", "ABCDA", "AGAEA", "AZAFA", "ZYAAA"];
-let requests4 = ["BB", "DD", "Z", "Y", "Z", "G", "C", "E", "F"];
+// let storage2 = ["AAAAAA", "ABBBBA", "ACABBA", "AAAABA", "ABBBBA", "BBAAAA"];
+// let requests2 = ["BB", "C"];
 
-console.log(solution(storage, requests));
-//console.log(Array.from(storage2, str=>Array.from(str)));
+// let storage3 = ["HAH", "HBH", "HHH", "HAH", "HBH"];
+// let requests3 = ["C", "B", "B", "B", "B", "H"];
+
+// let storage4 = ["AAAAA", "ABCDA", "AGAEA", "AZAFA", "ZYAAA"];
+// let requests4 = ["BB", "DD", "Z", "Y", "Z", "G", "C", "E", "F"];
+
+// let storage5 = ["AAAAA", "ABABA", "ABCBA", "BBBAA", "AAAAA"];
+// let requests5 = ["BB", "C"];
+
+// console.log(solution(storage5, requests5));
+
+

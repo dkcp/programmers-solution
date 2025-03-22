@@ -1,43 +1,18 @@
-function isOutside(i, j){
-  let routes = [];
-  let di = 0, dj = 0;
+function solution(n, q, ans) {
+  var answer = 0;
 
-  let k = 0;
-  do {
-    if(i===0 || i===array.length || j===0 || j===array[0].length) return true;
+  for(let i=0; i<q.length; i++){
+    console.log(`${q[i]} 입력... 비밀코드와 ${ans[i]}개 일치`)
+  }
 
-    di = 0; dj = 0;
-    if(i+1<array.length && !routes.includes((i+1) * array[0].length + j) && array[i+1][j]===' '){
-      routes.push((i+1) * array[0].length + j);
-      di = 1;
-    }else if(i>0 && !routes.includes((i-1) * array[0].length + j) && array[i-1][j]===' '){
-      routes.push((i-1) * array[0].length + j);
-      di = -1;
-    }else if(j+1<array[0].length && !routes.includes(i * array[0].length + j + 1) && array[i][j+1]===' '){
-      routes.push(i * array[0].length + j + 1);
-      dj = 1;
-    }else if(j>0 && !routes.includes(i * array[0].length + j - 1) && array[i][j-1]===' '){
-      routes.push(i * array[0].length + j - 1);
-      dj = -1;
-    }
-
-    k++; if(k>20) return;
-    i += di;
-    j += dj;
-  } while (di !== 0 || dj !== 0);
-
-  return false;
+  return answer;
 }
 
-const array2 = [
-  [' ', 'Z', 'W', 'Q', 'Y'],
-  ['C', 'A1', 'A2', ' ', 'X'],
-  [' ', ' ', 'D', 'D', ' '],
-  [' ', 'C', ' ', 'C', ' '],
-];
+// 비밀코드는 오름차순 정수 5개
+const n = 10;
+const q = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [3, 7, 8, 9, 10], [2, 5, 7, 9, 10], [3, 4, 5, 6, 7]];
+const ans = [2, 3, 4, 3, 3];
 
-let array3 = ["AAAAAA", "A    A", "ACA  A", "AAAA A", "A    A", "  AAAA"];
-let array = Array.from(array3, arr => Array.from(arr));
+solution(n, q, ans);
 
-//console.log(array);
-console.log(isOutside(1, 0));
+//15	[[2, 3, 9, 12, 13], [1, 4, 6, 7, 9], [1, 2, 8, 10, 12], [6, 7, 11, 13, 15], [1, 4, 10, 11, 14]]	[2, 1, 3, 0, 1]	5
